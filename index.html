@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8"> 
+  <title>算出プロパティ</title>
+</head>
+<body>
+  <div id="app">
+    <p>10文字以上の文字列を入力してください</p>
+    <input type="text" v-model="inputCharactors">
+    <p v-if="inputNumber < 10">必要な文字数は{{ needNumbers }}文字です</p>
+    <p v-else>10文字以上入力されています</p>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+    var app = new Vue({
+      el: "#app",
+      data: {
+        inputCharactors: ''
+      },
+      computed: {
+        inputNumber: function(){
+          return this.inputCharactors.length;
+        },
+        needNumbers: function(){
+          return 10 - this.inputNumber;
+        }
+      }
+    })
+  </script>
+</body>
+</html>
