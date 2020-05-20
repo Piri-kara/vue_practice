@@ -35,6 +35,13 @@
     <submit-event v-on:from-child="receiveMessage"></submit-event>
   </div>
 
+  <div id="app5">
+    <slot-test>
+      <template slot="title">vue.jsの基礎</template>
+      <template slot="content">vue.jsについて</template>
+    </slot-test>
+  </div>
+
 
 
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -102,6 +109,16 @@
       }
     })
 
+    // スロットとコンポーネント
+    // 親側から子コンポーネントに値を挿入できる
+    // この場合、slotタグ内が親コンポーネントのslot-testタグによって置き換わる
+    Vue.component('slot-test', {
+      template: `<div>
+      <h1><slot name="title">タイトル</slot></h1>
+      <p><slot name="content">内容</slot></p>
+      </div>`,
+    })
+
     var app = new Vue({
       el: '#app'
     })
@@ -136,6 +153,16 @@
         receiveMessage: function(message){
           this.message = message;
         }
+      }
+    })
+
+    var app5 = new Vue({
+      el: "#app5",
+      data: {
+
+      },
+      methods: {
+
       }
     })
   </script>
