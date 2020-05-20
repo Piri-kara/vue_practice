@@ -25,6 +25,18 @@
     <hello-world v-bind:message="inputText"></hello-world>
   </div>
 
+
+  <div id="app4">
+    <!-- 親は子からくるイベントに対するalertMessageメソッドを設定し、from-childイベントの発生を待つ -->
+    <emit-event v-on:from-child="alertMessage"></emit-event>
+
+    <!-- 親側で子からのイベント発生を待機。from-childが来たら、receiveMessageを発動-->
+    <p>{{ message }}</p>
+    <submit-event v-on:from-child="receiveMessage"></submit-event>
+  </div>
+
+
+
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script>
     // どこでも使えるグローバルcomponent
@@ -54,6 +66,42 @@
       }
     })
 
+    //子から親へのデータ渡し
+    Vue.component('emit-event', {
+      // 子コンポーネント側でボタンに対してクリックイベントを設定
+      template: `<button v-on:click="clickEvent">ボタン</button>`,
+      methods: {
+        // クリックイベントが発生したら、イベントの処理で$emitメソッドを実行
+        // from-childと言う親に渡したいイベントを発生させる
+        clickEvent: function(){
+          // $emitは引数を取ることができる
+          // 引数を利用してデータを送る
+          // 複数のデータを渡す場合はオブジェクトを利用する
+          this.$emit('from-child')
+        }
+      }
+    })
+
+    Vue.component('submit-event', {
+      // 子コンポーネントに入力フォームを作成し、送信ボタンを押すとイベントが発生
+      template: `<div>
+      <input type="text" v-model="inputText">
+      <button v-on:click="clickEvent">送信ボタン</button>
+      </div>`,
+      data: function(){
+        return {
+          inputText: ''
+        }
+      },
+      methods: {
+        // 送信ボタンによるイベント
+        clickEvent: function(){
+          // $emitを利用して入力内容を親に送る
+          this.$emit('from-child', this.inputText)
+        }
+      }
+    })
+
     var app = new Vue({
       el: '#app'
     })
@@ -73,6 +121,21 @@
       el: '#app3',
       data: {
         inputText: ''
+      }
+    })
+
+    var app4 = new Vue({
+      el: "#app4",
+      data: {
+        message: ''
+      },
+      methods: {
+        alertMessage: function(){
+          alert('子からイベントを受け取ったよ')
+        },
+        receiveMessage: function(message){
+          this.message = message;
+        }
       }
     })
   </script>
